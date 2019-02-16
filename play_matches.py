@@ -2,41 +2,41 @@ import random
 
 import tennis
 
-NUM_SETS = 100
-SET_KWARGS = {}
+NUM_MATCHES = 100
+MATCH_KWARGS = {}
 
 def scaled_range(*, start, stop, scale):
   return (i * scale for i in range(start, stop))
 
-def play_set(
+def play_match(
   *,
   first_server_serving_point_win_prob,
   first_returner_serving_point_win_prob,
-  set_kwargs
+  match_kwargs
 ):
-  zet = tennis.Set(**set_kwargs)
+  match = tennis.Match(**match_kwargs)
   while True:
     first_server_point_win_prob = first_server_serving_point_win_prob \
-      if zet.first_server_to_serve() \
+      if match.first_server_to_serve() \
       else first_returner_serving_point_win_prob
-    if zet.point(first_server=random.random() < first_server_point_win_prob) is not None:
-      return zet
+    if match.point(first_server=random.random() < first_server_point_win_prob) is not None:
+      return match
 
-def play_sets(
+def play_matches(
   *,
   first_server_serving_point_win_prob,
   first_returner_serving_point_win_prob,
-  num_sets,
-  set_kwargs
+  num_matches,
+  match_kwargs
 ):
-  first_server_sets_won = 0
-  for _ in range(num_sets):
-    first_server_sets_won += play_set(
+  first_server_matches_won = 0
+  for _ in range(num_matches):
+    first_server_matches_won += play_match(
       first_server_serving_point_win_prob=first_server_serving_point_win_prob,
       first_returner_serving_point_win_prob=first_returner_serving_point_win_prob,
-      set_kwargs=set_kwargs
+      match_kwargs=match_kwargs
     ).winner()
-  return first_server_sets_won / num_sets
+  return first_server_matches_won / num_matches
 
 if __name__ == '__main__':
   import matplotlib
@@ -50,11 +50,11 @@ if __name__ == '__main__':
   axes.imshow(
     tuple(
       tuple(
-        play_sets(
+        play_matches(
           first_server_serving_point_win_prob=first_server_serving_point_win_prob,
           first_returner_serving_point_win_prob=first_returner_serving_point_win_prob,
-          num_sets=NUM_SETS,
-          set_kwargs=SET_KWARGS
+          num_matches=NUM_MATCHES,
+          match_kwargs=MATCH_KWARGS
         ) for first_returner_serving_point_win_prob in point_win_probs
       ) for first_server_serving_point_win_prob in point_win_probs
     ),
@@ -63,7 +63,7 @@ if __name__ == '__main__':
   )
 
   axes.set(
-    title=f'P(first server wins set) ({NUM_SETS} sets per data point)',
+    title=f'P(first server wins match) ({NUM_MATCHES} matches per data point)',
     xlabel='P(first server wins point while returning)',
     ylabel='P(first server wins point while serving)'
   )
