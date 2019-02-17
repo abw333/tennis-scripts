@@ -23,6 +23,9 @@ def play_match(
     if match.point(first_server=random.random() < first_server_point_win_prob) is not None:
       return match
 
+def _cache_key(*, float1, float2):
+  return (f'{float1:.4f}', f'{float2:.4f}')
+
 def play_matches(
   *,
   first_server_serving_point_win_prob,
@@ -44,6 +47,7 @@ if __name__ == '__main__':
 
   point_win_probs = tuple(scaled_range(start=1, stop=100, scale=0.01))
 
+  match_win_probs_cache = {}
   match_win_probs = []
   for first_server_serving_point_win_prob in point_win_probs:
     match_win_probs_col = []
@@ -58,17 +62,30 @@ if __name__ == '__main__':
         ),
         end='\r'
       )
-      match_win_probs_col.append(
-        play_matches(
+      if _cache_key(
+        float1=1 - first_server_serving_point_win_prob,
+        float2=1 - first_returner_serving_point_win_prob
+      ) in match_win_probs_cache:
+        match_win_prob = 1 - match_win_probs_cache[_cache_key(
+          float1=1 - first_server_serving_point_win_prob,
+          float2=1 - first_returner_serving_point_win_prob
+        )]
+      else:
+        match_win_prob = play_matches(
           first_server_serving_point_win_prob=first_server_serving_point_win_prob,
           first_returner_serving_point_win_prob=first_returner_serving_point_win_prob,
           num_matches=NUM_MATCHES,
           match_kwargs=MATCH_KWARGS
         )
-      )
+        match_win_probs_cache[_cache_key(
+          float1=first_server_serving_point_win_prob,
+          float2=first_returner_serving_point_win_prob
+        )] = match_win_prob
+      match_win_probs_col.append(match_win_prob)
     match_win_probs.append(match_win_probs_col)
 
-  print('\033[KDone playing matches!')
+  elapsed = time.time() - start
+  print(f'\033[KDone playing matches! Elapsed time: {elapsed:.0f}s')
 
   import matplotlib
   matplotlib.use('TkAgg')
