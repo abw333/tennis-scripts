@@ -1,4 +1,5 @@
 import random
+import time
 
 import tennis
 
@@ -39,25 +40,44 @@ def play_matches(
   return first_server_matches_won / num_matches
 
 if __name__ == '__main__':
-  import matplotlib
-  matplotlib.use('TkAgg')
-  import matplotlib.pyplot
+  start = time.time()
 
   point_win_probs = tuple(scaled_range(start=1, stop=100, scale=0.01))
 
-  axes = matplotlib.pyplot.subplots()[1]
-
-  axes.imshow(
-    tuple(
-      tuple(
+  match_win_probs = []
+  for first_server_serving_point_win_prob in point_win_probs:
+    match_win_probs_col = []
+    for first_returner_serving_point_win_prob in point_win_probs:
+      elapsed = time.time() - start
+      print(
+        (
+          f'Playing {NUM_MATCHES} matches with '
+          f'first_server_serving_point_win_prob={first_server_serving_point_win_prob:.2f} and '
+          f'first_returner_serving_point_win_prob={first_returner_serving_point_win_prob:.2f}. '
+          f'Elapsed time: {elapsed:.0f}s'
+        ),
+        end='\r'
+      )
+      match_win_probs_col.append(
         play_matches(
           first_server_serving_point_win_prob=first_server_serving_point_win_prob,
           first_returner_serving_point_win_prob=first_returner_serving_point_win_prob,
           num_matches=NUM_MATCHES,
           match_kwargs=MATCH_KWARGS
-        ) for first_returner_serving_point_win_prob in point_win_probs
-      ) for first_server_serving_point_win_prob in point_win_probs
-    ),
+        )
+      )
+    match_win_probs.append(match_win_probs_col)
+
+  print('\033[KDone playing matches!')
+
+  import matplotlib
+  matplotlib.use('TkAgg')
+  import matplotlib.pyplot
+
+  axes = matplotlib.pyplot.subplots()[1]
+
+  axes.imshow(
+    match_win_probs,
     origin='lower',
     extent=[point_win_probs[0], point_win_probs[-1], point_win_probs[0], point_win_probs[-1]]
   )
