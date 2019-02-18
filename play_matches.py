@@ -5,6 +5,7 @@ import tennis
 
 NUM_MATCHES = 100
 MATCH_KWARGS = {}
+PLOT = True
 
 def scaled_range(*, start, stop, scale):
   return (i * scale for i in range(start, stop))
@@ -87,22 +88,23 @@ if __name__ == '__main__':
   elapsed = time.time() - start
   print(f'\033[KDone playing matches! Elapsed time: {elapsed:.0f}s')
 
-  import matplotlib
-  matplotlib.use('TkAgg')
-  import matplotlib.pyplot
+  if PLOT:
+    import matplotlib
+    matplotlib.use('TkAgg')
+    import matplotlib.pyplot
 
-  axes = matplotlib.pyplot.subplots()[1]
+    axes = matplotlib.pyplot.subplots()[1]
 
-  axes.imshow(
-    match_win_probs,
-    origin='lower',
-    extent=[point_win_probs[0], point_win_probs[-1], point_win_probs[0], point_win_probs[-1]]
-  )
+    axes.imshow(
+      match_win_probs,
+      origin='lower',
+      extent=[point_win_probs[0], point_win_probs[-1], point_win_probs[0], point_win_probs[-1]]
+    )
 
-  axes.set(
-    title=f'P(first server wins match) ({NUM_MATCHES} matches per data point)',
-    xlabel='P(first server wins point while returning)',
-    ylabel='P(first server wins point while serving)'
-  )
+    axes.set(
+      title=f'P(first server wins match) ({NUM_MATCHES} matches per data point)',
+      xlabel='P(first server wins point while returning)',
+      ylabel='P(first server wins point while serving)'
+    )
 
-  matplotlib.pyplot.show()
+    matplotlib.pyplot.show()
