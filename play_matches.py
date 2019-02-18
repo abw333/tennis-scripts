@@ -197,7 +197,7 @@ if __name__ == '__main__':
     matplotlib.use('TkAgg')
     import matplotlib.pyplot
 
-    axes = matplotlib.pyplot.subplots()[1]
+    axes = matplotlib.pyplot.subplots(figsize=(8, 8))[1]
 
     axes.imshow(
       match_win_probs,
@@ -206,7 +206,10 @@ if __name__ == '__main__':
     )
 
     axes.set(
-      title=f'P(first server wins match) ({NUM_MATCHES} matches per data point)',
+      title=(
+        f'P(first server wins match) '
+        f'({NUM_MATCHES} matches with {MATCH_KWARGS_KEY} scoring rules per data point)'
+      ),
       xlabel='P(first server wins point while returning)',
       ylabel='P(first server wins point while serving)'
     )
