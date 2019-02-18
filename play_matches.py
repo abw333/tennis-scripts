@@ -40,7 +40,7 @@ def play_matches(
       first_server_serving_point_win_prob=first_server_serving_point_win_prob,
       first_returner_serving_point_win_prob=first_returner_serving_point_win_prob,
       match_kwargs=match_kwargs
-    ).winner()
+    ).winner
   return first_server_matches_won / num_matches
 
 if __name__ == '__main__':
