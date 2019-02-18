@@ -163,7 +163,7 @@ if __name__ == '__main__':
           f'Playing {NUM_MATCHES} matches with '
           f'first_server_serving_point_win_prob={first_server_serving_point_win_prob:.2f} and '
           f'first_returner_serving_point_win_prob={first_returner_serving_point_win_prob:.2f}. '
-          f'Elapsed time: {elapsed:.0f}s'
+          f'Elapsed time: {elapsed:.2f}s'
         ),
         end='\r'
       )
@@ -190,7 +190,7 @@ if __name__ == '__main__':
     match_win_probs.append(match_win_probs_col)
 
   elapsed = time.time() - start
-  print(f'\033[KDone playing matches! Elapsed time: {elapsed:.0f}s')
+  print(f'\033[KDone playing matches! Elapsed time: {elapsed:.2f}s')
 
   if PLOT:
     import matplotlib
