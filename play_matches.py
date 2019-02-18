@@ -214,4 +214,5 @@ if __name__ == '__main__':
       ylabel='P(first server wins point while serving)'
     )
 
+    matplotlib.pyplot.savefig(f'{MATCH_KWARGS_KEY}-{NUM_MATCHES}.png')
     matplotlib.pyplot.show()
