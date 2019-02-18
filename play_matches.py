@@ -3,8 +3,111 @@ import time
 
 import tennis
 
-NUM_MATCHES = 100
-MATCH_KWARGS = {}
+NUM_MATCHES = 10
+
+MATCH_KWARGS = {
+  'ATP Tour': {
+    'target_sets': 2,
+    'target_games': 6,
+    'deciding_point': False,
+    'tiebreak_games': 6,
+    'tiebreak_points': 7,
+    'final_set_target_games': 6,
+    'final_set_deciding_point': False,
+    'final_set_tiebreak_games': 6,
+    'final_set_tiebreak_points': 7
+  },
+  'Australian Open': {
+    'target_sets': 3,
+    'target_games': 6,
+    'deciding_point': False,
+    'tiebreak_games': 6,
+    'tiebreak_points': 7,
+    'final_set_target_games': 6,
+    'final_set_deciding_point': False,
+    'final_set_tiebreak_games': 6,
+    'final_set_tiebreak_points': 10
+  },
+  'French Open': {
+    'target_sets': 3,
+    'target_games': 6,
+    'deciding_point': False,
+    'tiebreak_games': 6,
+    'tiebreak_points': 7,
+    'final_set_target_games': 6,
+    'final_set_deciding_point': False,
+    'final_set_tiebreak_games': None,
+    'final_set_tiebreak_points': None
+  },
+  'Wimbledon': {
+    'target_sets': 3,
+    'target_games': 6,
+    'deciding_point': False,
+    'tiebreak_games': 6,
+    'tiebreak_points': 7,
+    'final_set_target_games': 6,
+    'final_set_deciding_point': False,
+    'final_set_tiebreak_games': 12,
+    'final_set_tiebreak_points': 7
+  },
+  'US Open': {
+    'target_sets': 3,
+    'target_games': 6,
+    'deciding_point': False,
+    'tiebreak_games': 6,
+    'tiebreak_points': 7,
+    'final_set_target_games': 6,
+    'final_set_deciding_point': False,
+    'final_set_tiebreak_games': 6,
+    'final_set_tiebreak_points': 7
+  },
+  'Next Gen Finals': {
+    'target_sets': 3,
+    'target_games': 4,
+    'deciding_point': True,
+    'tiebreak_games': 3,
+    'tiebreak_points': 7,
+    'final_set_target_games': 4,
+    'final_set_deciding_point': True,
+    'final_set_tiebreak_games': 3,
+    'final_set_tiebreak_points': 7
+  },
+  'Doubles': {
+    'target_sets': 2,
+    'target_games': 6,
+    'deciding_point': True,
+    'tiebreak_games': 6,
+    'tiebreak_points': 7,
+    'final_set_target_games': 0,
+    'final_set_deciding_point': False,
+    'final_set_tiebreak_games': 0,
+    'final_set_tiebreak_points': 10
+  },
+  'Tiebreak': {
+    'target_sets': 1,
+    'target_games': 6,
+    'deciding_point': False,
+    'tiebreak_games': 6,
+    'tiebreak_points': 7,
+    'final_set_target_games': 0,
+    'final_set_deciding_point': False,
+    'final_set_tiebreak_games': 0,
+    'final_set_tiebreak_points': 7
+  },
+  'Super Tiebreak': {
+    'target_sets': 1,
+    'target_games': 6,
+    'deciding_point': False,
+    'tiebreak_games': 6,
+    'tiebreak_points': 7,
+    'final_set_target_games': 0,
+    'final_set_deciding_point': False,
+    'final_set_tiebreak_games': 0,
+    'final_set_tiebreak_points': 10
+  }
+}
+MATCH_KWARGS_KEY = 'ATP Tour'
+
 PLOT = True
 
 def scaled_range(*, start, stop, scale):
@@ -44,6 +147,7 @@ def play_matches(
   return first_server_matches_won / num_matches
 
 if __name__ == '__main__':
+  print(f'Using {MATCH_KWARGS_KEY} scoring rules')
   start = time.time()
 
   point_win_probs = tuple(scaled_range(start=1, stop=100, scale=0.01))
@@ -76,7 +180,7 @@ if __name__ == '__main__':
           first_server_serving_point_win_prob=first_server_serving_point_win_prob,
           first_returner_serving_point_win_prob=first_returner_serving_point_win_prob,
           num_matches=NUM_MATCHES,
-          match_kwargs=MATCH_KWARGS
+          match_kwargs=MATCH_KWARGS[MATCH_KWARGS_KEY]
         )
         match_win_probs_cache[_cache_key(
           float1=first_server_serving_point_win_prob,
