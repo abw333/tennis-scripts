@@ -150,7 +150,7 @@ if __name__ == '__main__':
   print(f'Using {MATCH_KWARGS_KEY} scoring rules')
   start = time.time()
 
-  point_win_probs = tuple(scaled_range(start=1, stop=100, scale=0.01))
+  point_win_probs = tuple(scaled_range(start=10, stop=91, scale=0.01))
 
   match_win_probs_cache = {}
   match_win_probs = []
