@@ -1,3 +1,4 @@
+import os
 import random
 import time
 
@@ -214,5 +215,12 @@ if __name__ == '__main__':
       ylabel='P(first server wins point while serving)'
     )
 
-    matplotlib.pyplot.savefig(f'{MATCH_KWARGS_KEY}-{NUM_MATCHES}.png')
+    figs_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'figs')
+    if not os.path.exists(figs_dir):
+      os.mkdir(figs_dir)
+
+    matplotlib.pyplot.savefig(
+      os.path.join(figs_dir, f'{MATCH_KWARGS_KEY}-{NUM_MATCHES}-{start}.png')
+    )
+
     matplotlib.pyplot.show()
