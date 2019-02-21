@@ -41,9 +41,7 @@ if __name__ == '__main__':
 
     os.makedirs(unzipped_dir)
 
-    for year in range(2000, 2020):
-      file_name = f'{year}.zip'
-
+    for file_name in os.listdir(zipped_dir):
       print(f'Unzipping {file_name}', end='\r')
 
       with zipfile.ZipFile(os.path.join(zipped_dir, file_name)) as z:
