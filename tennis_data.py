@@ -10,6 +10,7 @@ if __name__ == '__main__':
   tennis_data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tennis-data')
   zipped_dir = os.path.join(tennis_data_dir, 'zipped')
   unzipped_dir = os.path.join(tennis_data_dir, 'unzipped')
+  csv_dir = os.path.join(tennis_data_dir, 'csv')
 
   command = sys.argv[1]
   if command == 'download':
@@ -41,10 +42,32 @@ if __name__ == '__main__':
 
     os.makedirs(unzipped_dir)
 
-    for file_name in os.listdir(zipped_dir):
+    for file_name in sorted(os.listdir(zipped_dir)):
       print(f'Unzipping {file_name}', end='\r')
 
       with zipfile.ZipFile(os.path.join(zipped_dir, file_name)) as z:
         z.extractall(unzipped_dir)
+  elif command == 'csv':
+    import csv
+    import xlrd
+
+    if not os.path.exists(unzipped_dir):
+      print('Must unzip data before converting it to CSV.')
+      exit()
+
+    if os.path.exists(csv_dir):
+      shutil.rmtree(csv_dir)
+
+    os.makedirs(csv_dir)
+
+    for file_name in sorted(os.listdir(unzipped_dir)):
+      print(f'Converting {file_name} to CSV', end='\r')
+
+      sheet = xlrd.open_workbook(os.path.join(unzipped_dir, file_name)).sheet_by_index(0)
+
+      data = tuple(tuple(cell.value for cell in row) for row in sheet.get_rows())
+
+      with open(os.path.join(csv_dir, os.path.splitext(file_name)[0] + '.csv'), 'w') as f:
+        csv.writer(f).writerows(data)
   else:
     print(f'Invalid command: {command}')
