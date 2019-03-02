@@ -11,6 +11,7 @@ if __name__ == '__main__':
   zipped_dir = os.path.join(tennis_data_dir, 'zipped')
   unzipped_dir = os.path.join(tennis_data_dir, 'unzipped')
   csv_dir = os.path.join(tennis_data_dir, 'csv')
+  data_file = os.path.join(tennis_data_dir, 'data.csv')
 
   command = sys.argv[1]
   if command == 'download':
@@ -69,5 +70,38 @@ if __name__ == '__main__':
 
       with open(os.path.join(csv_dir, os.path.splitext(file_name)[0] + '.csv'), 'w') as f:
         csv.writer(f).writerows(data)
+  elif command == 'prep':
+    import pandas
+
+    if not os.path.exists(csv_dir):
+      print('Must convert data to CSV before prepping it.')
+      exit()
+
+    if os.path.exists(data_file):
+      os.remove(data_file)
+
+    dfs = []
+    for file_name in sorted(os.listdir(csv_dir)):
+      print(f'Loading {file_name}', end='\r')
+
+      df = pandas.read_csv(os.path.join(csv_dir, file_name))
+      df['File Name'] = file_name
+
+      dfs.append(df)
+
+    data = pandas.concat(dfs, sort=False)
+
+    columns = [
+      'ATP', 'Location', 'Tournament', 'Date', 'Series', 'Court', 'Surface', 'Round', 'Best of', 'Winner', 'Loser',
+      'WRank', 'LRank', 'WPts', 'LPts', 'W1', 'L1', 'W2', 'L2', 'W3', 'L3', 'W4', 'L4', 'W5', 'L5', 'Wsets', 'Lsets',
+      'Comment', 'File Name', 'B&WW', 'B&WL', 'B365W', 'B365L', 'CBW', 'CBL', 'EXW', 'EXL', 'GBW', 'GBL', 'IWW', 'IWL',
+      'LBW', 'LBL', 'PSW', 'PSL', 'SBW', 'SBL', 'SJW', 'SJL', 'UBW', 'UBL', 'MaxW', 'MaxL', 'AvgW', 'AvgL'
+    ]
+
+    assert set(data.columns) == set(columns)
+
+    data = data[columns]
+
+    data.to_csv(data_file, index=False)
   else:
     print(f'Invalid command: {command}')
